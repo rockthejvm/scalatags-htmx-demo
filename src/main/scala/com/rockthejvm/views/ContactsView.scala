@@ -98,8 +98,8 @@ object ContactsView {
           tr(
             th(),
             th("Name"),
-            th("Phone"),
-            th("Email")
+            th("Email"),
+            th("Phone")
           )
         ),
         tbody(
