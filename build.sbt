@@ -40,13 +40,11 @@ val tests = Seq(
   "com.softwaremill.sttp.client3" %% "zio-json" % sttpZioJsonVersion % Test
 )
 
-//val emailValidator = Seq("commons-validator" % "commons-validator" % emailValidatorVersion)
-
 lazy val rootProject = (project in file(".")).settings(
   Seq(
     name := "zio-http-htmx",
     version := "0.1.0-SNAPSHOT",
-    organization := "com.softwaremill",
+    organization := "com.rockthejvm",
     scalaVersion := currentScalaVersion,
     Test / fork := true,
     scalacOptions ++= Seq(

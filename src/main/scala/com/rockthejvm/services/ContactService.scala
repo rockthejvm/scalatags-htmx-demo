@@ -67,6 +67,6 @@ class ContactService(contactsRepository: ContactsRepository) {
 }
 
 object ContactService {
-  val live: ZLayer[ContactsRepository, Nothing, ContactService] = 
+  val live: ZLayer[ContactsRepository, Nothing, ContactService] =
     ZLayer.derive[ContactService]
 }
