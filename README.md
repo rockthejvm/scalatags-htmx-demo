@@ -9,6 +9,8 @@ Welcome to Neon Pages: an extremely minimal CRM where you can keep a database of
 
 This is a single-page application (SPA) built with ZIO, ScalaTags and htmx.
 
+![neon pages](./static/neon%20pages.png)
+
 ## How to run
 
 This demo project has a main class in `Main.scala`, so you can run the project by
