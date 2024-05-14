@@ -13,7 +13,7 @@ import java.time.Instant
 import scala.collection.immutable
 import scala.util.chaining.*
 
-class ContactsRepository(quill: Quill.Sqlite[SnakeCase]):
+class ContactsRepository(quill: Quill.Sqlite[SnakeCase]) {
   import quill.*
 
   private inline def queryContact = quote(querySchema[Contact](entity = "contacts"))
@@ -75,6 +75,7 @@ class ContactsRepository(quill: Quill.Sqlite[SnakeCase]):
         ServerExceptions.AlreadyInUse(e.getMessage)
       case e => ServerExceptions.DatabaseException(s"${message}: e.getMessage")
     }
+}
 
 object ContactsRepository {
   val live: ZLayer[Quill.Sqlite[SnakeCase], Nothing, ContactsRepository] =

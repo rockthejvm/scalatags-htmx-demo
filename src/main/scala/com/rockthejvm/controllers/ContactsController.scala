@@ -9,7 +9,8 @@ import zio.*
 import zio.http.*
 
 import scala.util.chaining.scalaUtilChainingOps
-case class ContactsController private (service: ContactService):
+
+case class ContactsController private (service: ContactService) {
 
   def routes: Routes[Any, Response] = Routes(
     Method.GET / "contacts" -> handler { (req: Request) =>
@@ -30,7 +31,9 @@ case class ContactsController private (service: ContactService):
         .map(scalatagsToResponse)
         .defaultErrorsMappings
     },
-    Method.GET / "contacts" / "new" -> handler { (req: Request) => newContactForm },
+    Method.GET / "contacts" / "new" -> handler { (req: Request) => 
+      newContactForm 
+    },
     Method.GET / "contacts" / long("id") -> handler { (id: Long, req: Request) =>
       service
         .findById(id)
@@ -81,7 +84,6 @@ case class ContactsController private (service: ContactService):
         .defaultErrorsMappings
     },
     Method.DELETE / "contacts" -> handler { (req: Request) =>
-      // TODO hardcoded strings...
       val page = req.url.queryParams.get("page").flatMap(_.toIntOption).getOrElse(0)
       val deleteContacts = for {
         form <- req.body.asURLEncodedForm
@@ -119,13 +121,11 @@ case class ContactsController private (service: ContactService):
         .defaultErrorsMappings
     },
     Method.POST / "contacts" / "new" -> handler { (req: Request) =>
-      // TODO what level do I handle errors at?
       createContact(req)
         .as(
           Response
             .seeOther(Redirects.contacts)
             .addFlashMessage("Created new contact")
-            // TODO flash message no show
         )
         .catchSome { case e: ServerExceptions.ValidationError =>
           req.body.asURLEncodedForm
@@ -135,6 +135,7 @@ case class ContactsController private (service: ContactService):
         .defaultErrorsMappings
     }
   )
+  
   private def toHomePageResponse(html: Text.TypedTag[String]) = HomePage
     .generate(html)
     .pipe(scalatagsToResponse)
@@ -151,6 +152,7 @@ case class ContactsController private (service: ContactService):
       .mapError(e => ServerExceptions.BadRequest("Malformed form data"))
       .flatMap(form => service.update(id, form.map))
   }
+  
   private def newContactForm: Response = {
     ContactsView
       .newContactForm()
@@ -163,5 +165,8 @@ case class ContactsController private (service: ContactService):
     Headers(Header.ContentType(MediaType.text.html).untyped),
     Body.fromString(view.render)
   )
-object ContactsController:
+}
+
+object ContactsController {
   val live = ZLayer.derive[ContactsController]
+}

@@ -7,8 +7,6 @@ import zio.http.FormField
 import zio.prelude.{Validation, ZValidation}
 import zio.*
 
-import java.sql.SQLException
-
 class ContactService(contactsRepository: ContactsRepository) {
   type FormMap = Map[String, FormField]
 
