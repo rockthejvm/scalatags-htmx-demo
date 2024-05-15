@@ -29,6 +29,6 @@ class DbMigrator(ds: DataSource) {
 object DbMigrator {
   case class DbMigrationFailed(msg: String, stackTrace: String) extends RuntimeException(s"$msg\n$stackTrace")
   
-  def live: ZLayer[DataSource, Nothing, DbMigrator] = 
+  val live: ZLayer[DataSource, Nothing, DbMigrator] = 
     ZLayer.fromFunction(DbMigrator(_))
 }
