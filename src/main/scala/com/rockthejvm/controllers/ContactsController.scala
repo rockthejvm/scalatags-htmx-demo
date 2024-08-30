@@ -16,7 +16,7 @@ case class ContactsController private (service: ContactService) {
     Method.GET / "contacts" -> handler { (req: Request) =>
       val page = req.url.queryParams.get("page").flatMap(_.toIntOption).getOrElse(0)
       val searchTerm = req.url.queryParams.getOrElse("q", "")
-      val isActiveSearch = req.headers.exists(header => header.headerName == "HX-Trigger" && header.renderedValue == "search")
+      val isActiveSearch = req.headers.exists(header => header.headerName == "HX-Trigger" && header.renderedValue == "search-input")
 
       service
         .searchContacts(searchTerm, page)
