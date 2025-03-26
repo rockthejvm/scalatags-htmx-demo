@@ -31,8 +31,8 @@ case class ContactsController private (service: ContactService) {
         .map(scalatagsToResponse)
         .defaultErrorsMappings
     },
-    Method.GET / "contacts" / "new" -> handler { (req: Request) => 
-      newContactForm 
+    Method.GET / "contacts" / "new" -> handler { (req: Request) =>
+      newContactForm
     },
     Method.GET / "contacts" / long("id") -> handler { (id: Long, req: Request) =>
       service
@@ -88,11 +88,13 @@ case class ContactsController private (service: ContactService) {
       val deleteContacts = for {
         form <- req.body.asURLEncodedForm
         // Converts incoming contact ids
-        selectedContacts = form
-          .map("selected_contact_ids")
-          .stringValue
-          .map(_.split(",").map(_.toLong).toList)
-          .getOrElse(List.empty)
+        selectedContacts <- ZIO.attempt(
+          form
+            .map("selected_contact_ids")
+            .stringValue
+            .map(_.split(",").map(_.toLong).toList)
+            .getOrElse(List.empty)
+        )
         _ <- ZIO.foreach(selectedContacts)(service.delete)
         contacts <- service.listContacts(0)
         count <- service.count()
@@ -135,7 +137,7 @@ case class ContactsController private (service: ContactService) {
         .defaultErrorsMappings
     }
   )
-  
+
   private def toHomePageResponse(html: Text.TypedTag[String]) = HomePage
     .generate(html)
     .pipe(scalatagsToResponse)
@@ -152,7 +154,7 @@ case class ContactsController private (service: ContactService) {
       .mapError(e => ServerExceptions.BadRequest("Malformed form data"))
       .flatMap(form => service.update(id, form.map))
   }
-  
+
   private def newContactForm: Response = {
     ContactsView
       .newContactForm()
