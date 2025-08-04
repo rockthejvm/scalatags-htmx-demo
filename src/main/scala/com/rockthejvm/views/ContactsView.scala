@@ -122,25 +122,30 @@ object ContactsView {
                 )
               )
             ),
+          ),
+          tr(
+            td(
+              colspan := "7",
+              div(
+                style := "display: flex; justify-content: space-between",
+                button(
+                  style := "width: 160px",
+                  HtmxAttributes.get(s"/contacts?page=${page}&q=${searchTerm}"),
+                  HtmxAttributes.target("closest tr"),
+                  HtmxAttributes.swap("outerHTML"),
+                  HtmxAttributes.select("tbody > tr"),
+                  "Load More"
+                ),
+                button(
+                  style := "width: 280px",
+                  HtmxAttributes.delete("/contacts"),
+                  HtmxAttributes.confirm("Are you sure you want to delete these contacts?"),
+                  HtmxAttributes.target("body"),
+                  "Delete Selected Contacts"
+                )
+              )
+            )
           )
-        )
-      ),
-      div(
-        style := "display: flex; justify-content: space-between",
-        button(
-          style := "width: 160px",
-          HtmxAttributes.get(s"/contacts?page=${page}&q=${searchTerm}"),
-          HtmxAttributes.target("closest tr"),
-          HtmxAttributes.swap("outerHTML"),
-          HtmxAttributes.select("tbody > tr"),
-          "Load More"
-        ),
-        button(
-          style := "width: 280px",
-          HtmxAttributes.delete("/contacts"),
-          HtmxAttributes.confirm("Are you sure you want to delete these contacts?"),
-          HtmxAttributes.target("body"),
-          "Delete Selected Contacts"
         )
       )
     ),
